@@ -2,6 +2,11 @@ package org.position.objects;
 
 import java.io.Serializable;
 
+/**
+ * @author sgrotz
+ * Sample trade object. Each thread will use the trade object to fire it against Terracotta. 
+ * Make sure it is serializable :)
+ */
 public class trade implements Serializable {
 
 	/**

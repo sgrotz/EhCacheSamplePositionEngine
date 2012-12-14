@@ -9,6 +9,11 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
+/**
+ * @author sgrotz
+ * This sample class is used to list the positions throughout the processing. 
+ * Leave this service running and then start the thread producers. You should see the positions being calculated on the fly...
+ */
 public class listPositions {
 	
 	
@@ -21,7 +26,6 @@ public class listPositions {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
 		counter = 0;
 		int previousCount = 0; 
@@ -39,13 +43,13 @@ public class listPositions {
 			} 
 			int Tps;
 			
+			// Start with the Position Reading
 			System.out.println(" *** NEW POSITION READING *** Total Trades: " + totalCount + " ***" );
 			while (it.hasNext()) {
 				
 				Element e = null;
 
 					 e = cache.get(it.next());
-					 //System.out.println(e);searchTrades.getTotalTrades();
 				
 					 position pos = (position) e.getValue();
 
@@ -57,11 +61,8 @@ public class listPositions {
 							 "/S:" + searchTrades.getTotalTrades(pos.getSTOCK(), "SELL") +
 							 ")"
 							 );
-
-
 			}
-			//System.out.println("SYSTEM STATISTICS:");
-			// System.out.println(searchTrades.getStatistics());
+
 			if (totalCount == previousCount) {
 				Tps = 0;
 			} else {

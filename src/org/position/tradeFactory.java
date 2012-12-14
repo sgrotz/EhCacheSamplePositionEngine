@@ -9,9 +9,16 @@ import java.util.Random;
 
 import org.position.objects.trade;
 
+/**
+ * @author sgrotz
+ * The tradeFactory is a sample class, creating very simple trades.
+ */
 public class tradeFactory {
 	
+	// Specify random value (0 - 1000000)
 	private static int randomValue = 10000000;
+	
+	// Specify the dateformat being used
 	private static DateFormat dateFormat = new SimpleDateFormat("HHmmssSSS");
 
 	/**
@@ -19,26 +26,27 @@ public class tradeFactory {
 	 * @throws InterruptedException 
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		// TODO Auto-generated method stub
 		
+		// Main method - If ran through console ...
 		while (true) {
 			System.out.println(getRandomID() + " " + getRandomBuySell() + " " +getRandomPrice() + " " + getRandomQuantity()+ " " +getRandomStock());
 			Thread.sleep(1000);
 		}
-		
 	}
 	
+	// Random Trade Generator
 	public static trade createRandomTrade() {
-		
 		return createTrade(getRandomID(), getRandomBuySell(), getRandomPrice() , getRandomQuantity(), getRandomStock(), getRandomCurrency());
-	
 	}
 	
 	
+	// Create a new trade object ...
 	public static trade createTrade(String ID, String BUYSELL, Double PRICE, int QUANTITY, String STOCK, String CURRENCY) {
 		
+		// Create a new object
 		trade myTrade = new trade();
 		
+		// set trade values
 		myTrade.setID(ID);
 		myTrade.setBUYSELL(BUYSELL);
 		myTrade.setPRICE(PRICE);
@@ -49,6 +57,12 @@ public class tradeFactory {
 		return myTrade;
 		
 	}
+	
+	
+	
+	/**
+	 * Random generators, including Stocks, IDs, BuySell etc
+	 */
 	
 	
 	

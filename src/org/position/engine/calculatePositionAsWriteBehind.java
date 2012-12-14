@@ -15,6 +15,12 @@ import net.sf.ehcache.Element;
 import net.sf.ehcache.writer.CacheWriter;
 import net.sf.ehcache.writer.writebehind.operations.SingleOperationType;
 
+/**
+ * @author sgrotz
+ * CacheWriter implementation - in case you specify a write-through or write behind strategy in your ehcache.xml file.
+ * Make sure to implement both scenarios - ALL for batch updates (loop over all elements) and normal method for write through (single object)!
+ */
+
 public class calculatePositionAsWriteBehind implements CacheWriter {
 
 
@@ -89,21 +95,25 @@ public void write(Element e) throws CacheException {
 		
 	}
 	
- public static void updatePosition(trade newTrade)  {
+	
+	
+ /**
+ * @param newTrade
+ * Contains the actual logic to calculate the positions across all available books.
+ */
+	
+public static void updatePosition(trade newTrade)  {
 	 
 	 manager = CacheManager.newInstance("config/ehcache.xml");
 	 cache = manager.getCache("bookOfPositions");
 		
 		String Stock = newTrade.getSTOCK();
-		//System.out.println("Running write behind for " + Stock);
 		Element pos = cache.get(Stock);
 
 		
 		if (pos != null)  {
 			position existingPosition = (position) pos.getObjectValue();
 		
-			//System.out.println("Old Position for Stock: " + Stock + " is: " +existingPosition.getQUANTITY() + " (Total Exposure: " + existingPosition.getEXPOSURE() +")");
-
 			int newQuantity = 0;
 			Double newExposure = 0.0;
 			

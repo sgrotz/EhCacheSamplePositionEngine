@@ -10,7 +10,14 @@ import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.event.CacheEventListener;
 
-public class calculatePositionOnTrades implements CacheEventListener, Cloneable {
+/**
+ * @author sgrotz
+ * The following class is used by the event listener to calculate the position on the fly. Make sure this
+ * class is cloneable. Take a look at the explicit locking used at the bottom. 
+ * 
+ */
+
+public class positionCalculationByTrade implements CacheEventListener, Cloneable {
 
 	
 	private static CacheManager manager;
@@ -42,7 +49,7 @@ public class calculatePositionOnTrades implements CacheEventListener, Cloneable 
 			throws CacheException {
 		
 		trade trade = (trade) element.getObjectValue();
-		// System.out.println("Trade " + element.getKey() + " wurde eingefügt ... " + trade.getBUYSELL() + " " + trade.getQUANTITY() + " " + trade.getSTOCK());
+		// System.out.println("Trade " + element.getKey() + " wurde eingef?gt ... " + trade.getBUYSELL() + " " + trade.getQUANTITY() + " " + trade.getSTOCK());
 		updatePosition(trade);
 		
 		
@@ -78,14 +85,23 @@ public class calculatePositionOnTrades implements CacheEventListener, Cloneable 
 	}
 	
 	
+	/**
+	 * @param newTrade
+	 * This is where the party happens ... 
+	 * In this sample, we also use explicit locking - This will avoid race conditions and make sure one value can only get locked from 
+	 * a single trade...
+	 */
 	public static void updatePosition(trade newTrade)  {
 		 
 		 manager = CacheManager.newInstance("config/ehcache.xml");
 		 cache = manager.getCache("bookOfPositions");
 			
 			String Stock = newTrade.getSTOCK();
-			//System.out.println("Running write behind for " + Stock);
+
+			// Acquire a write lock on this particular stock
 			cache.acquireWriteLockOnKey(Stock);
+			
+			// Get the current stock reading
 			Element pos = cache.get(Stock);
 
 			
@@ -116,6 +132,8 @@ public class calculatePositionOnTrades implements CacheEventListener, Cloneable 
 				
 				Element newpos = new Element(Stock, existingPosition);
 				//System.out.println(newpos + " " + existingPosition.getQUANTITY());
+				
+				// Either Put or Replace will work - but take a look at the documentation how they differ!
 				//cache.put(newpos);
 				cache.replace(newpos);
 			
@@ -136,9 +154,9 @@ public class calculatePositionOnTrades implements CacheEventListener, Cloneable 
 				cache.put(newElement);
 				
 			} 
-			cache.releaseWriteLockOnKey(Stock);
 			
+			// Very important - always make sure to release the LOCK. This should actually happen in the finally clause, but hey ... this is a sample ;)
+			cache.releaseWriteLockOnKey(Stock);
+		
 		}
-
-
 }

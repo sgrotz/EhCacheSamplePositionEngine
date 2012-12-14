@@ -54,7 +54,7 @@
   	  <cacheWriter writeMode="write_behind" maxWriteDelay="100" rateLimitPerSecond="500"
         writeCoalescing="false" writeBatching="true" writeBatchSize="1000"
         retryAttempts="0" retryAttemptDelaySeconds="2">
-   		<cacheWriterFactory class="org.position.engine.positionCalculationWriteBehind" />
+   		<cacheWriterFactory class="org.position.engine.calculatePositionWriteBehindFactory" />
 	  </cacheWriter>
    -->
   	  

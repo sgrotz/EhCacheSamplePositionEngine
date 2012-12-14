@@ -2,6 +2,13 @@ package org.position.objects;
 
 import java.io.Serializable;
 
+/**
+ * @author sgrotz
+ * Sample Position POJO, defining how a position should look like. This is a simple version ;)
+ * Make sure the object is serializable and that you create the get/setter methods...
+ */
+
+
 public class position implements Serializable {
 
 	/**

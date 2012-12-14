@@ -1,0 +1,76 @@
+<ehcache     
+    name="jPositionEngine"     
+    updateCheck="false">    
+    <diskStore         
+        path="./cacheStore/jPositionEngine">   
+    </diskStore>   
+     
+    <defaultCache         
+        eternal="false"         
+        maxElementsInMemory="5000"         
+        overflowToDisk="false">    
+    </defaultCache>    
+        
+    <cache         
+        name="bookOfPositions"         
+        eternal="true"
+        maxBytesLocalHeap="100M"                 
+        overflowToDisk="false"         
+        maxElementsOnDisk="2000"
+        statistics="true"> 
+                <!--  --> 
+        <terracotta/>                 
+    </cache>     
+        
+    <cache         
+        name="trades"         
+        eternal="true"
+        maxBytesLocalHeap="400M"              
+        overflowToDisk="false"         
+        cacheLoaderTimeoutMillis="30000"
+        maxElementsOnDisk="2000" 
+        statistics="true"> 
+        <!-- 
+        timeToIdleSeconds="60"
+        timeToLiveSeconds="60"  	--> 
+        <terracotta/>        	  
+
+<!--        
+		// Can be all - local or remote  -->
+        <cacheEventListenerFactory class="org.position.engine.positionCalculationFactory" properties="" listenFor="all"/>
+
+
+<!--        
+		// Make the following attributes searchable ...    -->
+	  <searchable>
+	    <searchAttribute name="STOCK" expression="value.getSTOCK()"/>
+	    <searchAttribute name="BUYSELL" expression="value.getBUYSELL()"/>
+  	  </searchable> 
+
+	  
+<!--
+		// Define a write-behind strategy with class
+  	  
+  	  <cacheWriter writeMode="write_behind" maxWriteDelay="100" rateLimitPerSecond="500"
+        writeCoalescing="false" writeBatching="true" writeBatchSize="1000"
+        retryAttempts="0" retryAttemptDelaySeconds="2">
+   		<cacheWriterFactory class="org.position.engine.positionCalculationWriteBehind" />
+	  </cacheWriter>
+   -->
+  	  
+<!-- 
+		// Self populating cache - reads in through this class ...
+  	  <cacheDecoratorFactory class="com.db.dbCustomerReadFactory" properties="" />  
+ -->
+  	            
+    </cache>    
+    <terracottaConfig         
+        url="localhost:9510"          
+        >    
+    </terracottaConfig>
+    
+    <!-- 
+    <cacheManagerPeerListenerFactory class="org.terracotta.ehcachedx.monitor.probe.ProbePeerListenerFactory"
+    properties="monitorAddress=localhost, monitorPort=9889, memoryMeasurement=true"/> 
+    -->
+</ehcache>
